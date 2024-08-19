@@ -29,12 +29,6 @@ SpeedDiagnose simplifica el seguimiento de la dieta al predecir lo que has comid
 - **Historial y Tendencias:**
   - Visualiza tu progreso y cambios en la dieta a lo largo del tiempo.
 
-## **Monetización**
-
-- **Freemium:**
-  - Accede a funcionalidades básicas de forma gratuita.
-  - Características avanzadas disponibles a través de suscripción.
-
 ## **Valor Diferencial**
 
 SpeedDiagnose ofrece un registro simplificado mediante predicciones automáticas basadas en tus hábitos, reduciendo el tiempo y esfuerzo necesarios para monitorear tu dieta.
