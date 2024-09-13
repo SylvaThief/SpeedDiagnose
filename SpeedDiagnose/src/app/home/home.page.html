@@ -1,20 +1,35 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Inicio</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <div class="container">
+    <!-- Título principal -->
+    <h1>Usted está sano!</h1>
+    
+    <!-- Gráfico circular (Placeholder para gráfico) -->
+    <div class="chart">
+      <ion-segment>
+        <ion-segment-button>Desayuno</ion-segment-button>
+        <ion-segment-button>Almuerzo</ion-segment-button>
+        <ion-segment-button>Once</ion-segment-button>
+        <ion-segment-button>Otro</ion-segment-button>
+      </ion-segment>
+    </div>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <!-- Gráfico de barras (Placeholder para gráfico) -->
+    <div class="stats">
+      <h2>Estadísticas avanzadas</h2>
+      <img src="assets/bar-chart.png" alt="Gráfico de barras" />
+    </div>
   </div>
+  
+  <!-- Icono de configuración -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="primary">
+      <ion-icon name="settings"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
