@@ -8,14 +8,14 @@
   <div class="container">
     <!-- Título principal -->
     <h1>Usted está sano!</h1>
-    
+
     <!-- Gráfico circular (Placeholder para gráfico) -->
     <div class="chart">
-      <ion-segment>
-        <ion-segment-button>Desayuno</ion-segment-button>
-        <ion-segment-button>Almuerzo</ion-segment-button>
-        <ion-segment-button>Once</ion-segment-button>
-        <ion-segment-button>Otro</ion-segment-button>
+      <ion-segment (ionChange)="onSegmentChanged($event)">
+        <ion-segment-button value="Desayuno">Desayuno</ion-segment-button>
+        <ion-segment-button value="Almuerzo">Almuerzo</ion-segment-button>
+        <ion-segment-button value="Once">Once</ion-segment-button>
+        <ion-segment-button value="Otro">Otro</ion-segment-button>
       </ion-segment>
     </div>
 
@@ -28,7 +28,7 @@
   
   <!-- Icono de configuración -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="primary">
+    <ion-fab-button color="primary" (click)="onSettingsClick()">
       <ion-icon name="settings"></ion-icon>
     </ion-fab-button>
   </ion-fab>
