@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActionSheetController, AlertController } from '@ionic/angular';
+import { ActionSheetController, AlertController, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -7,29 +7,60 @@ import { ActionSheetController, AlertController } from '@ionic/angular';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
+  totalCalories: number = 0; // Calorías totales ingresadas
 
-  // Definir listas de comidas
-  desayuno: string[] = ['Tostadas', 'Cereal', 'Jugo de naranja', 'Huevos', 'Avena', 'Frutas', 'Café'];
-  almuerzo: string[] = ['Pollo asado', 'Ensalada', 'Sopa de verduras', 'Carne al horno', 'Pasta', 'Arroz con pollo', 'Pizza'];
-  once: string[] = ['Sandwich', 'Té', 'Galletas', 'Empanadas', 'Jugos naturales', 'Pan con palta', 'Yogur'];
-  otro: string[] = ['Barra de proteínas', 'Frutos secos', 'Batido', 'Galletas de avena', 'Tostadas con miel', 'Fruta picada', 'Chocolates'];
+  desayuno: { name: string, calories: number }[] = [
+    { name: 'Tostadas', calories: 150 },
+    { name: 'Cereal', calories: 200 },
+    { name: 'Jugo de naranja', calories: 120 },
+    { name: 'Huevos', calories: 140 },
+    { name: 'Avena', calories: 160 },
+    { name: 'Frutas', calories: 100 },
+    { name: 'Café', calories: 5 }
+  ];
+  almuerzo: { name: string, calories: number }[] = [
+    { name: 'Pollo asado', calories: 300 },
+    { name: 'Ensalada', calories: 150 },
+    { name: 'Sopa de verduras', calories: 100 },
+    { name: 'Carne al horno', calories: 350 },
+    { name: 'Pasta', calories: 400 },
+    { name: 'Arroz con pollo', calories: 350 },
+    { name: 'Pizza', calories: 280 }
+  ];
+  once: { name: string, calories: number }[] = [
+    { name: 'Sandwich', calories: 250 },
+    { name: 'Té', calories: 30 },
+    { name: 'Galletas', calories: 200 },
+    { name: 'Empanadas', calories: 300 },
+    { name: 'Jugos naturales', calories: 120 },
+    { name: 'Pan con palta', calories: 180 },
+    { name: 'Yogur', calories: 150 }
+  ];
+  otro: { name: string, calories: number }[] = [
+    { name: 'Barra de proteínas', calories: 220 },
+    { name: 'Frutos secos', calories: 180 },
+    { name: 'Batido', calories: 250 },
+    { name: 'Galletas de avena', calories: 200 },
+    { name: 'Tostadas con miel', calories: 220 },
+    { name: 'Fruta picada', calories: 150 },
+    { name: 'Chocolates', calories: 300 }
+  ];
 
   constructor(
     private actionSheetController: ActionSheetController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private navController: NavController
   ) {}
 
-  // Función para elegir 3 comidas aleatorias de una lista
-  getRandomMeals(meals: string[]): string[] {
+  getRandomMeals(meals: { name: string, calories: number }[]): { name: string, calories: number }[] {
     let shuffled = meals.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, 3); // Selecciona los primeros 3 elementos de la lista mezclada
   }
 
-  // Evento al cambiar el segmento
   async onSegmentChanged(event: any) {
     const value = event.detail.value;
 
-    let selectedMeals: string[];
+    let selectedMeals: { name: string, calories: number }[];
 
     switch (value) {
       case 'Desayuno':
@@ -50,9 +81,10 @@ export class HomePage {
 
     // Crear los botones para el action sheet
     const buttons = selectedMeals.map(meal => ({
-      text: meal,
+      text: meal.name,
       handler: () => {
-        console.log(`${meal} seleccionado`);
+        this.totalCalories += meal.calories;
+        this.navController.navigateForward(`/calorias/${encodeURIComponent(meal.name)}/${meal.calories}`);
       }
     }));
 
@@ -71,7 +103,6 @@ export class HomePage {
     await actionSheet.present();
   }
 
-  // Evento al hacer clic en el botón de configuración
   async onSettingsClick() {
     const alert = await this.alertController.create({
       header: 'Configuración',

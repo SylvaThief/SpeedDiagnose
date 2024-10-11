@@ -1,14 +1,31 @@
 <ion-header>
   <ion-toolbar color="primary">
+    <ion-menu-button slot="start"></ion-menu-button>
     <ion-title>Inicio</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-menu side="start" contentId="main-content">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Seguimiento de Calorías</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item>
+        <ion-label>Cantidad total de calorías ingeridas</ion-label>
+        <ion-badge color="primary">{{ totalCalories }} kcal</ion-badge>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<ion-content id="main-content">
   <div class="container">
     <!-- Título principal -->
     <h1>Usted está sano!</h1>
-
+    
     <!-- Gráfico circular (Placeholder para gráfico) -->
     <div class="chart">
       <ion-segment (ionChange)="onSegmentChanged($event)">
@@ -25,7 +42,7 @@
       <img src="assets/bar-chart.png" alt="Gráfico de barras" />
     </div>
   </div>
-  
+
   <!-- Icono de configuración -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button color="primary" (click)="onSettingsClick()">

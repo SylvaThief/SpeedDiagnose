@@ -17,13 +17,24 @@ ion-segment {
   display: flex;
   justify-content: center;
   margin: 10px 0;
+  --indicator-color: transparent; /* Oculta el indicador de selección azul */
+  --indicator-height: 0px; /* Asegúrate de que el indicador no tenga altura */
+  --indicator-width: 0px; /* Asegúrate de que el indicador no tenga ancho */
 }
 
 ion-segment-button {
   margin: 0 5px;
-  background-color: #00bfa5;
-  color: #fff;
-  border-radius: 10px;
+  background-color: #00bfa5; /* Color de fondo del botón */
+  color: #fff; /* Color del texto del botón */
+  border-radius: 10px; /* Radio del borde del botón */
+  --background: transparent; /* Asegura que no haya fondo adicional */
+  --color: #fff; /* Color del texto del botón por defecto */
+  --border: none; /* Elimina cualquier borde adicional */
+}
+
+ion-segment-button[aria-selected="true"] {
+  --color: #00bfa5; /* Color del texto cuando el botón está seleccionado */
+  --background: transparent; /* Asegura que el fondo sea transparente cuando activado */
 }
 
 .stats {
@@ -39,4 +50,22 @@ ion-segment-button {
 
 ion-fab-button {
   --background: #00bfa5;
+}
+
+/* Estilos para la barra lateral */
+ion-menu {
+  --width: 250px;
+}
+
+ion-menu ion-item {
+  --padding-start: 20px;
+  --inner-padding-end: 0;
+}
+
+ion-menu ion-label {
+  font-size: 1.1rem;
+}
+
+ion-badge {
+  margin-left: 10px;
 }

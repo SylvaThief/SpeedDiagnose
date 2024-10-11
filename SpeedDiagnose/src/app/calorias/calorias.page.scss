@@ -1,0 +1,33 @@
+.container {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  ion-card {
+    width: 100%;
+    max-width: 400px;
+    margin: 20px;
+    text-align: center;
+  }
+  
+  ion-card-title {
+    font-size: 1.5rem;
+  }
+  
+  h2 {
+    font-size: 1.2rem;
+    color: #00bfa5;
+  }
+  
+  p {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  ion-button {
+    margin-top: 20px;
+  }
+  
