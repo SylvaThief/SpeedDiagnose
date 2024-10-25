@@ -8,18 +8,15 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['./menu.page.scss'],
 })
 export class MenuPage {
-  username: string = '';
+  email: string = '';  // Asegúrate de que esto sea 'email'
   password: string = '';
 
   constructor(private router: Router, private alertController: AlertController) {}
 
   async onLogin() {
-    // Simple validación de usuario y contraseña
-    if (this.username === 'admin' && this.password === '1234') {
-      // Redirigir al usuario si las credenciales son correctas
+    if (this.email === 'admin' && this.password === '1234') {
       this.router.navigate(['/home']);
     } else {
-      // Mostrar un mensaje de error si las credenciales son incorrectas
       const alert = await this.alertController.create({
         header: 'Error',
         message: 'Usuario o contraseña incorrectos.',
