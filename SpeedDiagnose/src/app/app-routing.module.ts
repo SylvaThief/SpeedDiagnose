@@ -14,11 +14,15 @@ const routes: Routes = [
   {
     path: 'menu',
     loadChildren: () => import('./menu/menu.module').then( m => m.MenuPageModule)
-  },  {
+  },
+  {
     path: 'calorias',
     loadChildren: () => import('./calorias/calorias.module').then( m => m.CaloriasPageModule)
   },
-
+  {
+    path: 'finish-signup', // Añadir la ruta para la página de verificación
+    loadChildren: () => import('./finish-signup/finish-signup.module').then( m => m.FinishSignupPageModule)
+  }
 ];
 
 @NgModule({

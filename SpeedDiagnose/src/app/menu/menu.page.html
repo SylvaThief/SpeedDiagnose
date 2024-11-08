@@ -5,6 +5,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <!-- Cabecera secundaria de la página -->
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Iniciar Sesión</ion-title>
@@ -13,16 +14,24 @@
 
   <!-- Formulario de Inicio de Sesión -->
   <div class="login-container">
+    <!-- Campo de entrada para el Email -->
     <ion-item>
-      <ion-label position="floating">Email</ion-label>
-      <ion-input [(ngModel)]="email" type="text"></ion-input>
+      <ion-label position="floating">Email</ion-label> <!-- Etiqueta flotante del email -->
+      <ion-input [(ngModel)]="email" type="text"></ion-input> <!-- Input para el email con enlace bidireccional a la variable 'email' -->
     </ion-item>
 
+    <!-- Campo de entrada para la Contraseña -->
     <ion-item>
-      <ion-label position="floating">Contraseña</ion-label>
-      <ion-input [(ngModel)]="password" type="password"></ion-input>
+      <ion-label position="floating">Contraseña</ion-label> <!-- Etiqueta flotante de la contraseña -->
+      <ion-input [(ngModel)]="password" type="password"></ion-input> <!-- Input para la contraseña con enlace bidireccional a la variable 'password' -->
     </ion-item>
 
+    <!-- Botón para iniciar sesión -->
     <ion-button expand="full" (click)="onLogin()">Iniciar Sesión</ion-button>
+    <!-- Este botón al hacer clic ejecuta la función 'onLogin()', que autentica al usuario con el correo y la contraseña -->
+
+    <!-- Botón para registrar un nuevo usuario -->
+    <ion-button expand="full" (click)="onRegister()">Registrar</ion-button>
+    <!-- Este botón al hacer clic ejecuta la función 'onRegister()', que enviará un enlace de verificación al correo ingresado -->
   </div>
 </ion-content>
