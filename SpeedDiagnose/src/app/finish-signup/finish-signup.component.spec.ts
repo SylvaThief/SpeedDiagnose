@@ -1,22 +1,23 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+// finish-signup.component.spec.ts
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FinishSignupPage } from './finish-signup.component'; // Asegúrate de que sea 'FinishSignupPage'
 import { IonicModule } from '@ionic/angular';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth'; // Si estás usando Firebase
 
-import { FinishSignupComponent } from './finish-signup.component';
+describe('FinishSignupPage', () => {
+  let component: FinishSignupPage;
+  let fixture: ComponentFixture<FinishSignupPage>;
 
-describe('FinishSignupComponent', () => {
-  let component: FinishSignupComponent;
-  let fixture: ComponentFixture<FinishSignupComponent>;
-
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ FinishSignupComponent ],
-      imports: [IonicModule.forRoot()]
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ FinishSignupPage ],
+      imports: [IonicModule.forRoot(), AngularFireAuthModule] // Asegúrate de que los módulos estén importados correctamente
     }).compileComponents();
 
-    fixture = TestBed.createComponent(FinishSignupComponent);
+    fixture = TestBed.createComponent(FinishSignupPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

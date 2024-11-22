@@ -6,18 +6,22 @@
 
 <ion-content>
   <div class="signup-container">
+    <!-- Campo para ingresar el correo electrónico -->
     <ion-item>
       <ion-label position="floating">Correo Electrónico</ion-label>
       <ion-input [(ngModel)]="email" type="email" required></ion-input>
     </ion-item>
 
+    <!-- Botón para enviar el código de verificación -->
     <ion-button expand="full" (click)="sendVerificationCode()">Enviar Código de Verificación</ion-button>
 
+    <!-- Campo para ingresar el código de verificación -->
     <ion-item *ngIf="verificationCode">
       <ion-label position="floating">Código de Verificación</ion-label>
       <ion-input [(ngModel)]="verificationCode" type="text" required></ion-input>
     </ion-item>
 
+    <!-- Botón para verificar el código, solo visible si el código está ingresado -->
     <ion-button expand="full" *ngIf="verificationCode" (click)="verifyCode()">Verificar Código</ion-button>
   </div>
 </ion-content>

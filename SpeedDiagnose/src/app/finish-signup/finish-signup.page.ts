@@ -24,8 +24,7 @@ export class FinishSignupPage {
     try {
       const actionCodeSettings = {
         // Configuración de la URL a la que redirigir después de la verificación
-        // Cambia esta URL a la que quieras
-        url: 'http://localhost:8100/finish-signup',
+        url: 'http://localhost:8100/finish-signup',  // Cambia esta URL según sea necesario
         handleCodeInApp: true,
       };
 
@@ -52,13 +51,21 @@ export class FinishSignupPage {
   }
 
   // Verificar el código ingresado
+  // Verificar el código ingresado
   async verifyCode() {
     const email = window.localStorage.getItem('emailForSignIn');
-    if (email && this.verificationCode) {
+    if (email) {
       try {
-        // Usar 'signInWithEmailLink' en lugar de 'confirmSignInWithEmailLink'
-        const result = await this.afAuth.signInWithEmailLink(email, this.verificationCode);
-        if (result) {
+        // Verificar si el enlace de verificación es válido
+        const isValidLink = await this.afAuth.isSignInWithEmailLink(window.location.href);
+
+        if (isValidLink) {
+          // Completar el proceso de verificación usando el enlace
+          await this.afAuth.signInWithEmailLink(email, window.location.href);
+
+          // Limpiar el email guardado
+          window.localStorage.removeItem('emailForSignIn');
+
           const alert = await this.alertController.create({
             header: 'Éxito',
             message: 'Registro completado correctamente.',
@@ -68,15 +75,23 @@ export class FinishSignupPage {
 
           // Redirigir al usuario a la página de inicio
           this.router.navigate(['/home']);
+        } else {
+          const alert = await this.alertController.create({
+            header: 'Error',
+            message: 'El enlace de verificación es inválido o ha expirado.',
+            buttons: ['OK']
+          });
+          await alert.present();
         }
-      } catch (error: any) {  // También añadimos 'any' aquí
+      } catch (error: any) {  // Añadimos manejo de error
         const alert = await this.alertController.create({
           header: 'Error',
-          message: 'Código de verificación incorrecto.',
+          message: error.message,  // Mostrar el mensaje de error real
           buttons: ['OK']
         });
         await alert.present();
       }
     }
   }
+
 }
