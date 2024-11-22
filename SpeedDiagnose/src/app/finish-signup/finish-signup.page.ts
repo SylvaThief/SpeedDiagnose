@@ -24,7 +24,7 @@ export class FinishSignupPage {
     try {
       const actionCodeSettings = {
         // Configuración de la URL a la que redirigir después de la verificación
-        url: 'http://localhost:8100/finish-signup',  // Cambia esta URL según sea necesario
+        url: `${window.location.origin}/finish-signup`,  // Cambia esta URL según sea necesario
         handleCodeInApp: true,
       };
 
@@ -40,7 +40,7 @@ export class FinishSignupPage {
         buttons: ['OK']
       });
       await alert.present();
-    } catch (error: any) {  // Ahora especificamos que el tipo de error es 'any'
+    } catch (error: any) {
       const alert = await this.alertController.create({
         header: 'Error',
         message: error.message,  // Usamos 'error.message' para obtener el mensaje de error
@@ -50,7 +50,6 @@ export class FinishSignupPage {
     }
   }
 
-  // Verificar el código ingresado
   // Verificar el código ingresado
   async verifyCode() {
     const email = window.localStorage.getItem('emailForSignIn');

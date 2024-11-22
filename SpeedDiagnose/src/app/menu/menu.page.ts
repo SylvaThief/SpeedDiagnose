@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { environment } from 'src/environments/environment';
+import { AngularFireAuth } from '@angular/fire/compat/auth'; // Importa Firebase Auth
 
 @Component({
   selector: 'app-menu',
@@ -19,12 +18,12 @@ export class MenuPage {
     private afAuth: AngularFireAuth // Firebase Authentication
   ) {}
 
-  // Función para el login
+  // Función para el login (Inicio de sesión)
   async onLogin() {
     try {
       const userCredential = await this.afAuth.signInWithEmailAndPassword(this.email, this.password);
       if (userCredential.user) {
-        this.router.navigate(['/home']);
+        this.router.navigate(['/home']);  // Redirige al usuario al 'home'
       }
     } catch (error) {
       const alert = await this.alertController.create({
@@ -36,19 +35,19 @@ export class MenuPage {
     }
   }
 
-  // Función para el registro (envío del código de verificación)
+  // Función para el registro (enviar código de verificación por correo)
   async onRegister() {
     try {
       const actionCodeSettings = {
-        // El enlace será enviado con este parámetro de retorno
-        url: `${window.location.origin}/finish-signup`,
-        handleCodeInApp: true
+        // Enlace con el cual se enviará el código de verificación
+        url: `${window.location.origin}/finish-signup`,  // Cambia según tu ruta de finalización
+        handleCodeInApp: true  // Esto asegura que el código sea gestionado dentro de la app
       };
 
-      // Enviar un enlace de verificación a este correo electrónico
+      // Enviar un enlace de verificación al correo ingresado
       await this.afAuth.sendSignInLinkToEmail(this.email, actionCodeSettings);
 
-      // Guardar el correo en el almacenamiento local para poder completarlo después
+      // Guardar el correo localmente para completar el registro más tarde
       localStorage.setItem('emailForSignIn', this.email);
 
       const alert = await this.alertController.create({
@@ -57,6 +56,9 @@ export class MenuPage {
         buttons: ['OK']
       });
       await alert.present();
+
+      // Redirigir a la página de "finish-signup"
+      this.router.navigate(['/finish-signup']);
     } catch (error) {
       const alert = await this.alertController.create({
         header: 'Error',
