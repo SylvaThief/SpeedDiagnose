@@ -8,14 +8,23 @@
 <ion-menu side="start" contentId="main-content">
   <ion-header>
     <ion-toolbar color="primary">
-      <ion-title>Seguimiento de Calorías</ion-title>
+      <ion-title>Seguimiento Nutricional</ion-title>
     </ion-toolbar>
   </ion-header>
   <ion-content>
     <ion-list>
+      <!-- Nutrientes acumulados -->
       <ion-item>
-        <ion-label>Cantidad total de calorías ingeridas</ion-label>
-        <ion-badge color="primary">{{ totalCalories }} kcal</ion-badge>
+        <ion-label>Grasa Total Ingerida</ion-label>
+        <ion-badge color="primary">{{ totalFat }} g</ion-badge>
+      </ion-item>
+      <ion-item>
+        <ion-label>Sodio Total Ingerido</ion-label>
+        <ion-badge color="primary">{{ totalSodium }} mg</ion-badge>
+      </ion-item>
+      <ion-item>
+        <ion-label>Carbohidratos Totales Ingeridos</ion-label>
+        <ion-badge color="primary">{{ totalCarbs }} g</ion-badge>
       </ion-item>
     </ion-list>
   </ion-content>
@@ -25,7 +34,7 @@
   <div class="container">
     <!-- Título principal -->
     <h1>¡Tu salud en un vistazo!</h1>
-    
+
     <!-- Gráfico circular (Placeholder para gráfico) -->
     <div class="chart">
       <ion-segment (ionChange)="onSegmentChanged($event)">
@@ -36,17 +45,12 @@
       </ion-segment>
     </div>
 
-    <!-- Contador de calorías -->
-    <div class="calorie-counter">
-      <h2>Calorías Ingeridas</h2>
-      <p>{{ totalCalories }} kcal</p>
+    <!-- Contador de nutrientes -->
+    <div class="nutrition-counter">
+      <h2>Nutrición General</h2>
+      <p><strong>Grasa Total:</strong> {{ totalFat }} g</p>
+      <p><strong>Sodio:</strong> {{ totalSodium }} mg</p>
+      <p><strong>Carbohidratos:</strong> {{ totalCarbs }} g</p>
     </div>
   </div>
-
-  <!-- Icono de configuración -->
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="primary" (click)="onSettingsClick()">
-      <ion-icon name="settings"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
 </ion-content>
