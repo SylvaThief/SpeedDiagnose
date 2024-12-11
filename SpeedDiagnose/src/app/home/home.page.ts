@@ -15,8 +15,8 @@ export class HomePage {
   totalSodium: number = 0;
   totalCarbs: number = 0;
 
-  apiUrl = 'https://api.api-ninjas.com/v1/nutrition'; 
-  apiKey = '6VPgdPqY6nnlFLLKb9uO2A==q3MDew6j0Qt2GpMu'; 
+  apiUrl = 'https://api.api-ninjas.com/v1/nutrition';
+  apiKey = '6VPgdPqY6nnlFLLKb9uO2A==q3MDew6j0Qt2GpMu';
 
   foodTranslationMap = {
     apple: 'Manzana',
@@ -59,7 +59,34 @@ export class HomePage {
     private firestore: AngularFirestore,
     private auth: AngularFireAuth,
     private toastController: ToastController
-  ) {}
+  ) {
+    this.loadUserData();
+  }
+
+  // Cargar datos del usuario
+  async loadUserData() {
+    const user = await this.auth.currentUser;
+    if (user) {
+      const userDoc = this.firestore.collection('food_items').doc(user.uid);
+      const userSnapshot = await userDoc.get().toPromise();
+
+      if (userSnapshot?.exists) {
+        const data: any = userSnapshot.data();
+        this.totalFat = data.totalFat || 0;
+        this.totalSodium = data.totalSodium || 0;
+        this.totalCarbs = data.totalCarbs || 0;
+      } else {
+        // Crear documento inicial si no existe
+        await userDoc.set({
+          UID: user.uid,
+          email: user.email,
+          totalFat: 0,
+          totalSodium: 0,
+          totalCarbs: 0,
+        });
+      }
+    }
+  }
 
   // Método para realizar la consulta a la API
   async searchFood(query: string) {
@@ -68,13 +95,11 @@ export class HomePage {
     });
 
     try {
-      console.log(`Buscando alimento: ${query}`);
       const response: any = await firstValueFrom(
         this.http.get(`${this.apiUrl}?query=${query}`, { headers })
       );
 
       if (!response || response.length === 0) {
-        console.log(`No se encontraron resultados para: ${query}`);
         return [];
       }
 
@@ -83,74 +108,58 @@ export class HomePage {
         return food.fat_total_g && food.sodium_mg && food.carbohydrates_total_g;
       });
 
-      if (filteredFoods.length === 0) {
-        console.log(`No se encontraron alimentos válidos para: ${query}`);
-      }
-
-      // Traducir el nombre del alimento
-      const translatedFoods = filteredFoods.map((food: any) => {
+      // Traducir el nombre del alimento y redondear valores numéricos a 2 decimales
+      return filteredFoods.map((food: any) => {
         const translatedName = this.foodTranslationMap[food.name.toLowerCase() as keyof typeof this.foodTranslationMap] || food.name;
+
         return { 
           ...food,
-          translatedName: translatedName
+          fat_total_g: parseFloat(food.fat_total_g.toFixed(2)), // Redondear grasa total
+          sodium_mg: parseFloat(food.sodium_mg.toFixed(2)), // Redondear sodio
+          carbohydrates_total_g: parseFloat(food.carbohydrates_total_g.toFixed(2)), // Redondear carbohidratos
+          translatedName: translatedName,
         };
       });
-
-      return translatedFoods;
-
     } catch (error) {
       console.error('Error al buscar alimentos:', error);
       return [];
     }
   }
 
+
+
   // Método para gestionar el cambio de segmento (categorías)
   async onSegmentChanged(event: any) {
     const value = event.detail.value;
 
-    // Lista extendida de alimentos (30 alimentos)
-    const foodQueries = [
-      'apple', 'banana', 'oats', 'eggs', 'chicken', 'rice', 'salad', 'beef', 'toast', 'butter', 'cheese', 'tea', 'carrot', 'broccoli', 'potato', 'cucumber',
-      'spinach', 'avocado', 'strawberry', 'watermelon', 'pineapple', 'mango', 'grapes', 'peach', 'pear', 'melon', 'tomato', 'lettuce', 'cabbage', 'onion'
-    ];
-
+    const foodQueries = Object.keys(this.foodTranslationMap);
     const foods: any[] = [];
 
-    let missingQueries = [...foodQueries]; // Mantener lista de consultas faltantes
-    let foundFoods = new Set(); // Usamos un Set para asegurarnos de que los alimentos sean distintos
+    let missingQueries = [...foodQueries];
+    let foundFoods = new Set();
 
-    console.log(`Consultando para: ${foodQueries.join(', ')}`);
-
-    // Consultar aleatoriamente hasta encontrar 4 alimentos distintos
     while (foundFoods.size < 4 && missingQueries.length > 0) {
       const randomIndex = Math.floor(Math.random() * missingQueries.length);
-      const query = missingQueries.splice(randomIndex, 1)[0]; // Eliminar el alimento de la lista
+      const query = missingQueries.splice(randomIndex, 1)[0];
 
       const foodData = await this.searchFood(query);
       if (foodData && foodData.length > 0) {
         foodData.forEach((food: any) => {
-          foundFoods.add(food.translatedName); // Añadir el nombre traducido para evitar duplicados
+          foundFoods.add(food.translatedName);
           foods.push(food);
         });
-      } else {
-        console.log(`No se encontraron resultados para: ${query}`);
       }
     }
 
-    if (foundFoods.size < 4) {
-      console.log('No se encontraron suficientes alimentos distintos.');
-    }
-
-    // Crear botones con los alimentos encontrados
     const buttons = foods.slice(0, 4).map((food: any) => ({
       text: `${food.translatedName} (Grasa: ${food.fat_total_g}g, Sodio: ${food.sodium_mg}mg, Carbohidratos: ${food.carbohydrates_total_g}g)`,
       handler: () => {
-        this.totalFat += food.fat_total_g;
-        this.totalSodium += food.sodium_mg;
-        this.totalCarbs += food.carbohydrates_total_g;
+        // Realizar la suma y redondear a 2 decimales
+        this.totalFat = parseFloat((this.totalFat + food.fat_total_g).toFixed(2));
+        this.totalSodium = parseFloat((this.totalSodium + food.sodium_mg).toFixed(2));
+        this.totalCarbs = parseFloat((this.totalCarbs + food.carbohydrates_total_g).toFixed(2));
 
-        // Guardar los datos nutricionales en Firestore
-        this.saveFoodDataToFirestore(food);
+        this.updateFoodData();
         this.navController.navigateForward(`/nutricion-general`);
       },
     }));
@@ -163,31 +172,32 @@ export class HomePage {
     await actionSheet.present();
   }
 
-  // Método para guardar los datos nutricionales en Firestore
-  async saveFoodDataToFirestore(food: any) {
-    const user = await this.auth.currentUser;  // Obtener el usuario autenticado
+  // Método para actualizar los datos del usuario en Firestore
+  async updateFoodData() {
+    const user = await this.auth.currentUser;
     if (!user) {
       this.showToast('No estás autenticado');
       return;
     }
 
-    const userId = user.uid;
-    const foodItem = {
-      name: food.translatedName,
-      fat: food.fat_total_g,
-      sodium: food.sodium_mg,
-      carbs: food.carbohydrates_total_g,
-      timestamp: new Date(),
-    };
-
     try {
-      await this.firestore.collection(`users/${userId}/food_items`).add(foodItem);
-      this.showToast('Datos nutricionales guardados');
+      // Redondear nuevamente antes de guardar en la base de datos
+      this.totalFat = parseFloat(this.totalFat.toFixed(2));
+      this.totalSodium = parseFloat(this.totalSodium.toFixed(2));
+      this.totalCarbs = parseFloat(this.totalCarbs.toFixed(2));
+
+      await this.firestore.collection('food_items').doc(user.uid).update({
+        totalFat: this.totalFat,
+        totalSodium: this.totalSodium,
+        totalCarbs: this.totalCarbs,
+      });
+      this.showToast('Datos actualizados correctamente');
     } catch (error) {
-      this.showToast('Error al guardar los datos');
-      console.error('Error saving food data to Firestore:', error);
+      this.showToast('Error al actualizar los datos');
+      console.error('Error actualizando los datos del usuario:', error);
     }
   }
+
 
   // Método para mostrar mensajes de toast
   async showToast(message: string) {
