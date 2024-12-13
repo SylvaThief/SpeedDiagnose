@@ -23,7 +23,7 @@ export class MenuPage {
   /**
    * Método para iniciar sesión
    */
-  async onLogin() {
+  async onLogin(email: string, password: string) {
     try {
       // Validar que el email y la contraseña no estén vacíos
       if (!this.email || !this.password) {

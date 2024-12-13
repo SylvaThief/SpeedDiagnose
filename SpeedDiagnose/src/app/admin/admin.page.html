@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-menu-button slot="start"></ion-menu-button>
+    <ion-title>Administración de Usuarios</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-menu side="start" contentId="main-content">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Opciones de Administración</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <!-- Cerrar sesión -->
+      <ion-item (click)="logout()">
+        <ion-label color="danger">Cerrar sesión</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<ion-content id="main-content">
+  <div class="container">
+    <h1>Administración de Usuarios</h1>
+
+    <ion-list>
+      <!-- Lista de usuarios -->
+      <ion-item *ngFor="let user of users">
+        <ion-label>
+          <h2>{{ user.email }}</h2>
+          <p>Administrador: {{ user.isAdmin ? 'Sí' : 'No' }}</p>
+        </ion-label>
+        <ion-item-options side="end">
+          <ion-item-option (click)="editUser(user)">Editar</ion-item-option>
+          <ion-item-option color="danger" (click)="deleteUser(user.id)">Eliminar</ion-item-option>
+        </ion-item-options>
+      </ion-item>
+    </ion-list>
+
+    <!-- Si no hay usuarios -->
+    <div *ngIf="users.length === 0">
+      <p>No hay usuarios registrados.</p>
+    </div>
+  </div>
+</ion-content>

@@ -27,8 +27,8 @@
     </ion-item>
 
     <!-- Botón para iniciar sesión -->
-    <ion-button expand="full" (click)="onLogin()">Iniciar Sesión</ion-button>
-    <!-- Este botón al hacer clic ejecuta la función 'onLogin()', que autentica al usuario con el correo y la contraseña -->
+    <ion-button expand="full" (click)="onLogin(email, password)">Iniciar Sesión</ion-button>
+    <!-- Este botón al hacer clic ejecuta la función 'onLogin()', pasando el email y la contraseña como parámetros -->
 
     <!-- Botón para registrar un nuevo usuario -->
     <ion-button expand="full" (click)="onRegister()">Registrar</ion-button>

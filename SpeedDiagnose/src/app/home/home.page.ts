@@ -245,4 +245,8 @@ export class HomePage {
       console.error('Error cerrando sesión:', error);
     }
   }
+   // Método para redirigir a la página de admin
+   goToAdminPage() {
+    this.navController.navigateForward('/admin');
+  }
 }

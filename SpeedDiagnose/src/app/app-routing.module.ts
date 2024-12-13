@@ -22,7 +22,12 @@ const routes: Routes = [
   {
     path: 'finish-signup', // Añadir la ruta para la página de verificación
     loadChildren: () => import('./finish-signup/finish-signup.module').then( m => m.FinishSignupPageModule)
+  },
+  {
+    path: 'admin',
+    loadChildren: () => import('./admin/admin.module').then( m => m.AdminPageModule)
   }
+
 ];
 
 @NgModule({

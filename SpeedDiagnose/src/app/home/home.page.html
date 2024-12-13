@@ -39,9 +39,9 @@
       </ion-item>
 
       <!-- Opciones solo para administradores -->
-      <ion-item *ngIf="isAdmin">
+      <ion-item *ngIf="isAdmin" button (click)="goToAdminPage()">
         <ion-label color="secondary">Opciones de administrador</ion-label>
-      </ion-item>
+      </ion-item>      
     </ion-list>
   </ion-content>
 </ion-menu>
