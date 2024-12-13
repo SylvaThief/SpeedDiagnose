@@ -2,9 +2,8 @@
  * App Global CSS
  * ----------------------------------------------------------------------------
  * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
+ * the entire app and not just one component. Additionally, this file can be used as an entry point
+ * to import other CSS/Sass files to be included in the output CSS.
  * For more information on global stylesheets, visit the documentation:
  * https://ionicframework.com/docs/layout/global-stylesheets
  */
@@ -35,3 +34,67 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+/* Estilos globales */
+body {
+    --ion-background-color: white; /* Color de fondo por defecto (modo claro) */
+    --ion-text-color: black; /* Color de texto por defecto (modo claro) */
+    --ion-toolbar-background: #f8f8f8; /* Fondo de la barra de herramientas en modo claro */
+    --ion-toolbar-color: black; /* Color de texto de la barra de herramientas en modo claro */
+  
+    &.dark {
+        --ion-background-color: #121212; /* Color de fondo en modo oscuro */
+        --ion-text-color: white; /* Color de texto en modo oscuro */
+        --ion-toolbar-background: #1e1e1e; /* Fondo de la barra de herramientas en modo oscuro */
+        --ion-toolbar-color: white; /* Color de texto de la barra de herramientas en modo oscuro */
+        --ion-item-background: #1e1e1e; /* Fondo de los items en modo oscuro */
+        --ion-item-color: white; /* Color de texto de los items en modo oscuro */
+    }
+}
+
+/* Personalización de otros elementos para el modo oscuro */
+ion-content {
+    --background: var(--ion-background-color);
+    --color: var(--ion-text-color);
+}
+
+ion-item {
+    --background: var(--ion-item-background);
+    --color: var(--ion-item-color);
+}
+
+ion-header {
+    --background: var(--ion-toolbar-background);
+    --color: var(--ion-toolbar-color);
+}
+
+ion-button {
+    --background: var(--ion-background-color);
+    --color: var(--ion-text-color);
+}
+
+ion-label {
+    --color: var(--ion-text-color);
+}
+
+ion-list {
+    --background: var(--ion-background-color);
+}
+
+/* Otros elementos que pueden necesitar personalización */
+ion-card {
+    --background: var(--ion-background-color);
+    --color: var(--ion-text-color);
+}
+
+ion-card-header {
+    --background: var(--ion-toolbar-background);
+    --color: var(--ion-toolbar-color);
+}
+
+ion-card-content {
+    --background: var(--ion-background-color);
+    --color: var(--ion-text-color);
+}
+
+/* Opcional: Puedes agregar más personalizaciones específicas para otros componentes como inputs, modales, etc. */

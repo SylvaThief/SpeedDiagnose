@@ -1,13 +1,13 @@
-<ion-header>
-  <ion-toolbar color="primary">
+<ion-header [class.dark]="darkModeEnabled">
+  <ion-toolbar [color]="darkModeEnabled ? 'dark' : 'primary'">
     <ion-menu-button slot="start"></ion-menu-button>
     <ion-title>Inicio</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-menu side="start" contentId="main-content">
-  <ion-header>
-    <ion-toolbar color="primary">
+  <ion-header [class.dark]="darkModeEnabled">
+    <ion-toolbar [color]="darkModeEnabled ? 'dark' : 'primary'">
       <ion-title>Seguimiento Nutricional</ion-title>
     </ion-toolbar>
   </ion-header>
@@ -26,16 +26,29 @@
         <ion-label>Carbohidratos Totales Ingeridos</ion-label>
         <ion-badge color="primary">{{ totalCarbs }} g</ion-badge>
       </ion-item>
+
+      <!-- Modo nocturno -->
+      <ion-item>
+        <ion-label>Modo nocturno</ion-label>
+        <ion-toggle slot="end" [checked]="darkModeEnabled" (ionChange)="toggleDarkMode()"></ion-toggle>
+      </ion-item>
+
+      <!-- Cerrar sesión -->
+      <ion-item (click)="logout()">
+        <ion-label color="danger">Cerrar sesión</ion-label>
+      </ion-item>
+
+      <!-- Opciones solo para administradores -->
+      <ion-item *ngIf="isAdmin">
+        <ion-label color="secondary">Opciones de administrador</ion-label>
+      </ion-item>
     </ion-list>
   </ion-content>
 </ion-menu>
 
 <ion-content id="main-content">
   <div class="container">
-    <!-- Título principal -->
     <h1>¡Tu salud en un vistazo!</h1>
-
-    <!-- Gráfico circular (Placeholder para gráfico) -->
     <div class="chart">
       <ion-segment (ionChange)="onSegmentChanged($event)">
         <ion-segment-button value="Desayuno">Desayuno</ion-segment-button>
@@ -43,14 +56,6 @@
         <ion-segment-button value="Once">Once</ion-segment-button>
         <ion-segment-button value="Otro">Otro</ion-segment-button>
       </ion-segment>
-    </div>
-
-    <!-- Contador de nutrientes -->
-    <div class="nutrition-counter">
-      <h2>Nutrición General</h2>
-      <p><strong>Grasa Total:</strong> {{ totalFat }} g</p>
-      <p><strong>Sodio:</strong> {{ totalSodium }} mg</p>
-      <p><strong>Carbohidratos:</strong> {{ totalCarbs }} g</p>
     </div>
   </div>
 </ion-content>

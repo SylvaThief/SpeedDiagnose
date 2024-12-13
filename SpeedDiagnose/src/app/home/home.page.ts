@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Router } from '@angular/router'; // Agregar Router para redirigir
 
 @Component({
   selector: 'app-home',
@@ -51,6 +52,9 @@ export class HomePage {
     onion: 'Cebolla',
   };
 
+  isAdmin: boolean = false; // Flag para verificar si el usuario es administrador
+  darkModeEnabled: boolean = false; // Estado del modo nocturno
+
   constructor(
     private actionSheetController: ActionSheetController,
     private alertController: AlertController,
@@ -58,31 +62,37 @@ export class HomePage {
     private http: HttpClient,
     private firestore: AngularFirestore,
     private auth: AngularFireAuth,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private router: Router // Asegúrate de importar Router
   ) {
     this.loadUserData();
+    this.loadTheme(); // Cargar el tema guardado
   }
 
   // Cargar datos del usuario
   async loadUserData() {
     const user = await this.auth.currentUser;
     if (user) {
-      const userDoc = this.firestore.collection('food_items').doc(user.uid);
+      const userDoc = this.firestore.collection('users').doc(user.uid); // Cambiar a la colección 'users'
       const userSnapshot = await userDoc.get().toPromise();
 
       if (userSnapshot?.exists) {
         const data: any = userSnapshot.data();
-        this.totalFat = data.totalFat || 0;
-        this.totalSodium = data.totalSodium || 0;
-        this.totalCarbs = data.totalCarbs || 0;
+        this.isAdmin = data.isAdmin || false; // Verificar si el usuario es administrador
+
+        // Verificar si existen los campos de nutrición y asignar un valor por defecto de 0 si no existen
+        this.totalFat = data.totalFat ?? 0;
+        this.totalSodium = data.totalSodium ?? 0;
+        this.totalCarbs = data.totalCarbs ?? 0;
       } else {
         // Crear documento inicial si no existe
         await userDoc.set({
           UID: user.uid,
           email: user.email,
-          totalFat: 0,
-          totalSodium: 0,
-          totalCarbs: 0,
+          isAdmin: false, // Configuración por defecto
+          totalFat: 0,    // Valor inicial de totalFat
+          totalSodium: 0, // Valor inicial de totalSodium
+          totalCarbs: 0,  // Valor inicial de totalCarbs
         });
       }
     }
@@ -126,8 +136,6 @@ export class HomePage {
     }
   }
 
-
-
   // Método para gestionar el cambio de segmento (categorías)
   async onSegmentChanged(event: any) {
     const value = event.detail.value;
@@ -159,7 +167,7 @@ export class HomePage {
         this.totalSodium = parseFloat((this.totalSodium + food.sodium_mg).toFixed(2));
         this.totalCarbs = parseFloat((this.totalCarbs + food.carbohydrates_total_g).toFixed(2));
 
-        this.updateFoodData();
+        this.updateFoodData();  // Esta función ahora actualiza los datos en 'users'
         this.navController.navigateForward(`/nutricion-general`);
       },
     }));
@@ -186,7 +194,7 @@ export class HomePage {
       this.totalSodium = parseFloat(this.totalSodium.toFixed(2));
       this.totalCarbs = parseFloat(this.totalCarbs.toFixed(2));
 
-      await this.firestore.collection('food_items').doc(user.uid).update({
+      await this.firestore.collection('users').doc(user.uid).update({ // Cambiar a la colección 'users'
         totalFat: this.totalFat,
         totalSodium: this.totalSodium,
         totalCarbs: this.totalCarbs,
@@ -198,7 +206,6 @@ export class HomePage {
     }
   }
 
-
   // Método para mostrar mensajes de toast
   async showToast(message: string) {
     const toast = await this.toastController.create({
@@ -207,5 +214,35 @@ export class HomePage {
       position: 'bottom',
     });
     toast.present();
+  }
+
+  // Función para activar/desactivar el modo nocturno
+  toggleDarkMode() {
+    this.darkModeEnabled = !this.darkModeEnabled;
+    localStorage.setItem('darkMode', JSON.stringify(this.darkModeEnabled));
+
+    // Aplicar el modo nocturno al body
+    document.body.classList.toggle('dark', this.darkModeEnabled);
+  }
+
+  // Cargar el tema guardado
+  loadTheme() {
+    const darkMode = localStorage.getItem('darkMode');
+    if (darkMode) {
+      this.darkModeEnabled = JSON.parse(darkMode);
+      document.body.classList.toggle('dark', this.darkModeEnabled);
+    }
+  }
+
+  // Método de logout
+  async logout() {
+    try {
+      await this.auth.signOut();
+      this.router.navigate(['/menu']); // Redirigir al login
+      this.showToast('Sesión cerrada');
+    } catch (error) {
+      this.showToast('Error al cerrar sesión');
+      console.error('Error cerrando sesión:', error);
+    }
   }
 }

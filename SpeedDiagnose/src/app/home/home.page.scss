@@ -4,9 +4,14 @@
 }
 
 h1 {
-  color: #000;
+  color: var(--ion-text-color); /* Usar el color de texto global */
   font-size: 2rem;
   margin-bottom: 20px;
+
+  /* En modo oscuro el color se ajusta automáticamente por la variable global */
+  &.dark {
+    color: var(--ion-text-color); /* Asegurarse de que el color se mantenga consistente */
+  }
 }
 
 .chart {
@@ -20,16 +25,26 @@ ion-segment {
   --indicator-color: transparent; /* Oculta el indicador de selección azul */
   --indicator-height: 0px; /* Asegúrate de que el indicador no tenga altura */
   --indicator-width: 0px; /* Asegúrate de que el indicador no tenga ancho */
+
+  &.dark {
+    --background: #333; /* Fondo del segmento en modo oscuro */
+    --color: var(--ion-text-color); /* Color de texto en modo oscuro */
+  }
 }
 
 ion-segment-button {
   margin: 0 5px;
-  background-color: #00bfa5; /* Color de fondo del botón */
-  color: #fff; /* Color del texto del botón */
+  background-color: #00bfa5; /* Color de fondo del botón en modo claro */
+  color: var(--ion-text-color); /* Color del texto del botón basado en el modo */
   border-radius: 10px; /* Radio del borde del botón */
   --background: transparent; /* Asegura que no haya fondo adicional */
-  --color: #fff; /* Color del texto del botón por defecto */
+  --color: var(--ion-text-color); /* Color del texto del botón por defecto */
   --border: none; /* Elimina cualquier borde adicional */
+
+  &.dark {
+    --color: #00bfa5; /* Color del texto en modo oscuro */
+    --background: transparent; /* Fondo transparente en modo oscuro */
+  }
 }
 
 ion-segment-button[aria-selected="true"] {
@@ -49,7 +64,8 @@ ion-segment-button[aria-selected="true"] {
 }
 
 ion-fab-button {
-  --background: #00bfa5;
+  --background: #00bfa5; /* Color de fondo del botón flotante */
+  --color: var(--ion-text-color); /* Asegura que el color del texto se adapte */
 }
 
 /* Estilos para la barra lateral */
@@ -64,8 +80,19 @@ ion-menu ion-item {
 
 ion-menu ion-label {
   font-size: 1.1rem;
+  color: var(--ion-text-color); /* Asegura que el texto de la barra lateral use el color global */
 }
 
 ion-badge {
   margin-left: 10px;
+}
+
+/* Agregar soporte para el modo nocturno en la barra lateral */
+ion-menu.dark {
+  --background: #1e1e1e; /* Fondo oscuro en la barra lateral */
+}
+
+ion-menu ion-item.dark {
+  --background: #333; /* Fondo oscuro de los items */
+  --color: var(--ion-text-color); /* Texto que sigue la variable global */
 }

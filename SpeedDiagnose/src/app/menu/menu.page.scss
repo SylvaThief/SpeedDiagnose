@@ -1,13 +1,28 @@
+/* Contenedor de inicio de sesión */
 .login-container {
-    padding: 20px;
-  }
+  padding: 20px;
+  background-color: var(--ion-background-color); /* Fondo acorde con el tema */
+}
+
+ion-item {
+  margin-top: 15px;
+  --background: var(--ion-background-color); /* Fondo dinámico según el tema */
+  --color: var(--ion-text-color); /* Texto dinámico según el tema */
+}
+
+/* Botón con color de fondo */
+ion-button {
+  margin-top: 20px;
+  --background: #3880ff; /* Color del botón en modo claro */
+  --color: white; /* Color del texto del botón */
   
-  ion-item {
-    margin-top: 15px;
+  /* Estilo para el modo oscuro */
+  &.dark {
+    --background: #0066cc; /* Fondo del botón en modo oscuro */
+    --color: white; /* Asegura que el color del texto del botón en modo oscuro sea blanco */
   }
-  
-  ion-button {
-    margin-top: 20px;
-    --background: #3880ff; /* Ajusta el color del botón */
-  }
-  
+}
+
+/* Se eliminan las reglas específicas para el modo oscuro de body, ya que ya se manejan en global.scss */
+
+/* Si necesitas realizar ajustes adicionales específicos para el modo oscuro, puedes hacerlo en este archivo. Por ejemplo, personalizar más botones, elementos de menú, etc. */

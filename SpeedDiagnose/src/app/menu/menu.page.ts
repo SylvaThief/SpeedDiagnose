@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { AngularFireAuth } from '@angular/fire/compat/auth'; // Importa Firebase Authentication
+import { AngularFirestore } from '@angular/fire/compat/firestore'; // Importa Firestore
 
 @Component({
   selector: 'app-menu', // Selector del componente
@@ -9,15 +10,14 @@ import { AngularFireAuth } from '@angular/fire/compat/auth'; // Importa Firebase
   styleUrls: ['./menu.page.scss'], // Estilos CSS asociados
 })
 export class MenuPage {
-  // Variables para almacenar el email y contraseña del usuario
   email: string = '';
   password: string = '';
 
-  // Inyección de dependencias necesarias en el constructor
   constructor(
-    private router: Router, // Para realizar navegación entre páginas
-    private alertController: AlertController, // Para mostrar alertas en la interfaz
-    private afAuth: AngularFireAuth // Servicio de Firebase Authentication
+    private router: Router, 
+    private alertController: AlertController, 
+    private afAuth: AngularFireAuth, // Servicio de Firebase Authentication
+    private firestore: AngularFirestore // Servicio de Firestore
   ) {}
 
   /**
@@ -30,15 +30,40 @@ export class MenuPage {
         throw new Error('Por favor, ingresa tu correo y contraseña.');
       }
 
-      // Intenta iniciar sesión con el correo y contraseña ingresados
+      // Iniciar sesión con el correo y contraseña
       const userCredential = await this.afAuth.signInWithEmailAndPassword(this.email, this.password);
 
       if (userCredential.user) {
-        // Si el usuario existe, redirige a la página 'home'
+        // Crear documento en Firestore si no existe
+        const userDoc = this.firestore.collection('users').doc(userCredential.user.uid);
+        const userSnapshot = await userDoc.get().toPromise();
+
+        // Verificar si el documento existe y si no está indefinido
+        if (userSnapshot && userSnapshot.exists) {
+          const userData = userSnapshot.data();
+
+          // Si faltan campos, los agregamos
+          const missingFields = this.checkMissingFields(userData);
+
+          if (Object.keys(missingFields).length > 0) {
+            // Actualizar solo los campos faltantes
+            await userDoc.update(missingFields);
+          }
+        } else {
+          // Si el documento no existe, lo creamos con los valores iniciales
+          await userDoc.set({
+            email: this.email,
+            isAdmin: false, // Asumir que no es admin por defecto
+            totalFat: 0,    // Valor inicial de totalFat
+            totalSodium: 0, // Valor inicial de totalSodium
+            totalCarbs: 0,  // Valor inicial de totalCarbs
+          });
+        }
+
+        // Redirigir al usuario a la página 'home'
         this.router.navigate(['/home']);
       }
     } catch (error) {
-      // Manejo de errores específicos y generales
       const errorMessage = this.getErrorMessage(error);
       const alert = await this.alertController.create({
         header: 'Error',
@@ -54,24 +79,18 @@ export class MenuPage {
    */
   async onRegister() {
     try {
-      // Validar que el email no esté vacío y tenga un formato válido
       if (!this.email || !this.email.includes('@')) {
         throw new Error('Por favor, ingresa un correo válido.');
       }
 
-      // Configuración del código de acción para la verificación de correo
       const actionCodeSettings = {
-        url: `${window.location.origin}/finish-signup`, // URL válida (ajusta según tu proyecto)
-        handleCodeInApp: true, // Gestiona el enlace dentro de la aplicación
+        url: `${window.location.origin}/finish-signup`,
+        handleCodeInApp: true,
       };
 
-      // Enviar el enlace de verificación al correo electrónico ingresado
       await this.afAuth.sendSignInLinkToEmail(this.email, actionCodeSettings);
-
-      // Guarda el email localmente para usarlo más tarde al completar el registro
       localStorage.setItem('emailForSignIn', this.email);
 
-      // Alerta de confirmación indicando que se envió el enlace
       const alert = await this.alertController.create({
         header: 'Verificación enviada',
         message: 'Te hemos enviado un código de verificación a tu correo electrónico.',
@@ -79,12 +98,10 @@ export class MenuPage {
       });
       await alert.present();
 
-      // Navega a la página de finalización de registro
       this.router.navigate(['/finish-signup']);
     } catch (error) {
-      // Manejo de errores específicos y generales
       const errorMessage = this.getErrorMessage(error);
-      console.error('Error en onRegister:', errorMessage); // Mostrar detalles del error en la consola
+      console.error('Error en onRegister:', errorMessage);
       const alert = await this.alertController.create({
         header: 'Error',
         message: errorMessage,
@@ -95,16 +112,31 @@ export class MenuPage {
   }
 
   /**
-   * Método para extraer el mensaje de error de un objeto tipo `unknown`
-   * @param error El error capturado
-   * @returns El mensaje de error o un mensaje genérico
+   * Verifica si faltan campos en los datos del usuario
    */
+  checkMissingFields(userData: any): any {
+    const missingFields: any = {};
+
+    // Comprobamos si los campos faltan o son nulos
+    if (userData && (userData.totalFat === undefined || userData.totalFat === null)) {
+      missingFields.totalFat = 0;
+    }
+
+    if (userData && (userData.totalSodium === undefined || userData.totalSodium === null)) {
+      missingFields.totalSodium = 0;
+    }
+
+    if (userData && (userData.totalCarbs === undefined || userData.totalCarbs === null)) {
+      missingFields.totalCarbs = 0;
+    }
+
+    return missingFields;
+  }
+
   private getErrorMessage(error: unknown): string {
     if (error instanceof Error) {
-      // Si el error es una instancia de `Error`, devuelve su mensaje
       return error.message;
     }
-    // Mensaje genérico si el error no tiene formato esperado
     return 'Ocurrió un error inesperado.';
   }
 }
