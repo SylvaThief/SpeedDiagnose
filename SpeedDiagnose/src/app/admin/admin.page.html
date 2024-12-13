@@ -1,47 +1,50 @@
 <ion-header>
-  <ion-toolbar color="primary">
-    <ion-menu-button slot="start"></ion-menu-button>
-    <ion-title>Administración de Usuarios</ion-title>
+  <ion-toolbar>
+    <ion-title>Administrador de Usuarios</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-menu side="start" contentId="main-content">
-  <ion-header>
-    <ion-toolbar color="primary">
-      <ion-title>Opciones de Administración</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content>
-    <ion-list>
-      <!-- Cerrar sesión -->
-      <ion-item (click)="logout()">
-        <ion-label color="danger">Cerrar sesión</ion-label>
-      </ion-item>
-    </ion-list>
-  </ion-content>
-</ion-menu>
+<ion-content>
+  <ion-list>
+    <!-- Mostrar la lista de usuarios -->
+    <ion-item *ngFor="let user of users">
+      <ion-label>
+        <strong>Email:</strong> {{ user.email }} <br>
+        <strong>isAdmin:</strong> {{ user.isAdmin }} <br>
+        <strong>Total Fat:</strong> {{ user.totalFat }} <br>
+        <strong>Total Sodium:</strong> {{ user.totalSodium }} <br>
+        <strong>Total Carbs:</strong> {{ user.totalCarbs }}
+      </ion-label>
+      <ion-buttons slot="end">
+        <!-- Botón para editar -->
+        <ion-button (click)="editUser(user.id, user)">Editar</ion-button>
+        <!-- Botón para eliminar -->
+        <ion-button color="danger" (click)="deleteUser(user.id)">Eliminar</ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
 
-<ion-content id="main-content">
-  <div class="container">
-    <h1>Administración de Usuarios</h1>
+  <!-- Formulario para editar datos del usuario -->
+  <ion-item>
+    <ion-label>Email</ion-label>
+    <ion-input [(ngModel)]="editedData.email"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>isAdmin</ion-label>
+    <ion-toggle [(ngModel)]="editedData.isAdmin"></ion-toggle>
+  </ion-item>
+  <ion-item>
+    <ion-label>Total Fat</ion-label>
+    <ion-input [(ngModel)]="editedData.totalFat" type="number"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>Total Sodium</ion-label>
+    <ion-input [(ngModel)]="editedData.totalSodium" type="number"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>Total Carbs</ion-label>
+    <ion-input [(ngModel)]="editedData.totalCarbs" type="number"></ion-input>
+  </ion-item>
 
-    <ion-list>
-      <!-- Lista de usuarios -->
-      <ion-item *ngFor="let user of users">
-        <ion-label>
-          <h2>{{ user.email }}</h2>
-          <p>Administrador: {{ user.isAdmin ? 'Sí' : 'No' }}</p>
-        </ion-label>
-        <ion-item-options side="end">
-          <ion-item-option (click)="editUser(user)">Editar</ion-item-option>
-          <ion-item-option color="danger" (click)="deleteUser(user.id)">Eliminar</ion-item-option>
-        </ion-item-options>
-      </ion-item>
-    </ion-list>
-
-    <!-- Si no hay usuarios -->
-    <div *ngIf="users.length === 0">
-      <p>No hay usuarios registrados.</p>
-    </div>
-  </div>
+  <ion-button expand="full" (click)="editUser(editedData.id, editedData)">Guardar Cambios</ion-button>
 </ion-content>
