@@ -26,7 +26,19 @@ const routes: Routes = [
   {
     path: 'admin',
     loadChildren: () => import('./admin/admin.module').then( m => m.AdminPageModule)
+  },  {
+    path: 'admin',
+    loadChildren: () => import('./admin/admin.module').then( m => m.AdminPageModule)
+  },
+  {
+    path: 'edit-user',
+    loadChildren: () => import('./edit-user/edit-user.module').then( m => m.EditUserPageModule)
+  },
+  {
+    path: 'app-food-api',
+    loadChildren: () => import('./app-food-api/app-food-api.module').then( m => m.AppFoodApiPageModule)
   }
+
 
 ];
 

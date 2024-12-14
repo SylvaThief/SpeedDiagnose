@@ -1,50 +1,29 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Administrador de Usuarios</ion-title>
+    <ion-title>Administrar Usuarios</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <!-- Lista de usuarios -->
   <ion-list>
-    <!-- Mostrar la lista de usuarios -->
     <ion-item *ngFor="let user of users">
       <ion-label>
-        <strong>Email:</strong> {{ user.email }} <br>
-        <strong>isAdmin:</strong> {{ user.isAdmin }} <br>
-        <strong>Total Fat:</strong> {{ user.totalFat }} <br>
-        <strong>Total Sodium:</strong> {{ user.totalSodium }} <br>
-        <strong>Total Carbs:</strong> {{ user.totalCarbs }}
+        <h2>{{ user.email }}</h2>
+        <p>Total de grasa: {{ user.totalFat }}</p>
+        <p>Total de sodio: {{ user.totalSodium }}</p>
+        <p>Total de carbohidratos: {{ user.totalCarbs }}</p>
       </ion-label>
       <ion-buttons slot="end">
         <!-- Botón para editar -->
-        <ion-button (click)="editUser(user.id, user)">Editar</ion-button>
+        <ion-button (click)="editUser(user)">
+          Editar
+        </ion-button>
         <!-- Botón para eliminar -->
-        <ion-button color="danger" (click)="deleteUser(user.id)">Eliminar</ion-button>
+        <ion-button color="danger" (click)="deleteUser(user)">
+          Eliminar
+        </ion-button>
       </ion-buttons>
     </ion-item>
   </ion-list>
-
-  <!-- Formulario para editar datos del usuario -->
-  <ion-item>
-    <ion-label>Email</ion-label>
-    <ion-input [(ngModel)]="editedData.email"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label>isAdmin</ion-label>
-    <ion-toggle [(ngModel)]="editedData.isAdmin"></ion-toggle>
-  </ion-item>
-  <ion-item>
-    <ion-label>Total Fat</ion-label>
-    <ion-input [(ngModel)]="editedData.totalFat" type="number"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label>Total Sodium</ion-label>
-    <ion-input [(ngModel)]="editedData.totalSodium" type="number"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label>Total Carbs</ion-label>
-    <ion-input [(ngModel)]="editedData.totalCarbs" type="number"></ion-input>
-  </ion-item>
-
-  <ion-button expand="full" (click)="editUser(editedData.id, editedData)">Guardar Cambios</ion-button>
 </ion-content>

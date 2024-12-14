@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Editar Usuario</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="saveUser()">Guardar Cambios</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Formulario para editar los datos del usuario -->
+  <ion-item>
+    <ion-label>Grasa total</ion-label>
+    <ion-input [(ngModel)]="user.totalFat" type="number" placeholder="Grasa total"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Sodio total</ion-label>
+    <ion-input [(ngModel)]="user.totalSodium" type="number" placeholder="Sodio total"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Carbohidratos totales</ion-label>
+    <ion-input [(ngModel)]="user.totalCarbs" type="number" placeholder="Carbohidratos totales"></ion-input>
+  </ion-item>
+</ion-content>
